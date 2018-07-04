@@ -55,7 +55,7 @@ bool PS2X::ReadGamepad(bool small_motor, uint8_t large_motor) {
   }
 
   _last_buttons = _buttons;
-  _buttons = *(uint16_t *)(_data + 3);
+  _buttons = (uint16_t)(_data[3]<<8 | _data[4]);
 
   return ((_data[1] & 0xF0) == 0x70);
 }
@@ -109,7 +109,7 @@ void PS2X::SendCommand(const uint8_t *command, uint8_t size) {
   }
 
   digitalWrite(_att_pin, HIGH);
-  delayMicroseconds(ATT_DELAY);
+  delay(ATT_DELAY/1000);
 }
 
 uint8_t PS2X::ShiftGamepad(uint8_t transmit_byte) {

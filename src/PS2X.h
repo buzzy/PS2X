@@ -11,7 +11,7 @@
 
 #include "Arduino.h"
 
-#define BYTE_DELAY       16
+#define BYTE_DELAY       8 
 #define ATT_DELAY        16000
 
 #define PSB_SELECT       0x0001
@@ -67,6 +67,8 @@ public:
   bool ButtonNewState();
   bool ButtonNewState(uint16_t button);
   uint8_t Analog(uint8_t button);
+  uint8_t _data[21];
+  uint16_t _buttons;
 private:
   void InitGamepad();
   void SendCommand(const uint8_t *command, uint8_t size);
@@ -75,9 +77,7 @@ private:
   uint8_t _cmd_pin;
   uint8_t _att_pin;
   uint8_t _dat_pin;
-  uint8_t _data[21];
   uint16_t _last_buttons;
-  uint16_t _buttons;
   bool _rumble;
   bool _native;
 };

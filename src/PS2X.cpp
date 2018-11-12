@@ -125,9 +125,10 @@ uint8_t PS2X::ShiftGamepad(uint8_t transmit_byte) {
     else {
       digitalWrite(_cmd_pin, LOW);
     }
-delayMicroseconds(5);
+    
+    delayMicroseconds(5);
     digitalWrite(_clk_pin, HIGH);
-delayMicroseconds(5);
+    delayMicroseconds(5);
 
     if (digitalRead(_dat_pin)) {
       received_byte |= _BV(i);

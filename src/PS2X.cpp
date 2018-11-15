@@ -80,6 +80,14 @@ bool PS2X::ButtonNewState(uint16_t button) {
   return (((_last_buttons ^ _buttons) & button) > 0);
 }
 
+bool PS2X::AnalogNewState() {
+  for (int i=0;i<21;i++) {
+    if (_data[i] != _last_data[i]) return true;
+  }
+
+  return false;
+}
+
 uint8_t PS2X::Analog(uint8_t button) {
   return _data[button];
 }
@@ -100,6 +108,9 @@ void PS2X::InitGamepad() {
 }
 
 void PS2X::SendCommand(const uint8_t *command, uint8_t size) {
+
+  std::copy(_data, _data+21, _last_data);
+
   digitalWrite(_att_pin, LOW);
   delayMicroseconds(BYTE_DELAY);
 

@@ -66,6 +66,7 @@ public:
   bool ButtonReleased(uint16_t button);
   bool ButtonNewState();
   bool ButtonNewState(uint16_t button);
+  bool AnalogNewState();
   uint8_t Analog(uint8_t button);
   uint8_t _data[21];
   uint16_t _buttons;
@@ -77,6 +78,7 @@ private:
   uint8_t _cmd_pin;
   uint8_t _att_pin;
   uint8_t _dat_pin;
+  uint8_t _last_data[21];
   uint16_t _last_buttons;
   bool _rumble;
   bool _native;

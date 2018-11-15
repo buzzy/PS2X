@@ -67,6 +67,7 @@ public:
   bool ButtonNewState();
   bool ButtonNewState(uint16_t button);
   bool AnalogNewState();
+  void Calibrate();
   uint8_t Analog(uint8_t button);
   uint8_t _data[21];
   uint16_t _buttons;
@@ -82,6 +83,7 @@ private:
   uint16_t _last_buttons;
   bool _rumble;
   bool _native;
+  uint8_t _analog_zero[4];
 };
 
 #endif

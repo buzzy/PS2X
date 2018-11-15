@@ -88,7 +88,28 @@ bool PS2X::AnalogNewState() {
   return false;
 }
 
+void PS2X::Calibrate() {
+  ReadGamepad(false, 0);
+
+  _analog_zero[PSS_LX] = _data[PSS_LX];
+  _analog_zero[PSS_LY] = _data[PSS_LY];
+  _analog_zero[PSS_RX] = _data[PSS_RX];
+  _analog_zero[PSS_RY] = _data[PSS_RY];
+}
+
 uint8_t PS2X::Analog(uint8_t button) {
+
+  switch (button) {
+    case PSS_LX:
+    case PSS_LY:
+    case PSS_RX:
+    case PSS_RY:
+
+      if (_data[button] < _analog_zero[button]) return map(_data[button], 0, _analog_zero[button]-1, 0, 126);
+      if (_data[button] >_analog_zero[button]) return map(_data[button], _analog_zero[button]+1, 255, 128, 255);
+      return 127;
+  }
+
   return _data[button];
 }
 

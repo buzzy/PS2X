@@ -83,7 +83,7 @@ private:
   uint16_t _last_buttons;
   bool _rumble;
   bool _native;
-  uint8_t _analog_zero[4];
+  uint8_t _analog_zero[21];
 };
 
 #endif

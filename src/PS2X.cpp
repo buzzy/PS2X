@@ -96,8 +96,8 @@ uint8_t PS2X::Analog(uint8_t button) {
     case PSS_RX:
     case PSS_RY:
 
-      if (_data[button] < _analog_zero[button]) return map(_data[button], 0, _analog_zero[button]-1, 0, 126);
-      if (_data[button] >_analog_zero[button]) return map(_data[button], _analog_zero[button]+1, 255, 128, 255);
+      if (_data[button] < (_analog_zero[button] - 10)) return map(_data[button], 0, _analog_zero[button]-1, 0, 126);
+      if (_data[button] > (_analog_zero[button] + 10)) return map(_data[button], _analog_zero[button]+1, 255, 128, 255);
       return 127;
   }
 

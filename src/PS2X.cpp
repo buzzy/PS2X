@@ -39,19 +39,11 @@ bool PS2X::ReadGamepad(bool small_motor, uint8_t large_motor) {
   uint8_t request_data[21] = { 0x01, 0x42, 0x00, small_motor, large_motor };
 
   for (uint8_t i = 0; i < 2; i++) {
-    if (_native) {
-      SendCommand(request_data, sizeof(request_data));
-    }
-    else {
-      SendCommand(request_data, 9);
-    }
+    if (_native) SendCommand(request_data, sizeof(request_data));
+    else SendCommand(request_data, 9);
 
-    if ((_data[1] & 0xF0) == 0x70) {
-      break;
-    }
-    else {
-      InitGamepad();
-    }
+    if ((_data[1] & 0xF0) == 0x70) break;
+    else InitGamepad();
   }
 
   _last_buttons = _buttons;
@@ -98,7 +90,6 @@ void PS2X::Calibrate() {
 }
 
 uint8_t PS2X::Analog(uint8_t button) {
-
   switch (button) {
     case PSS_LX:
     case PSS_LY:
@@ -118,18 +109,13 @@ void PS2X::InitGamepad() {
   SendCommand(config_mode, sizeof(config_mode));
   SendCommand(analog_mode, sizeof(analog_mode));
 
-  if (_rumble) {
-    SendCommand(rumble_mode, sizeof(rumble_mode));
-  }
-  if (_native) {
-    SendCommand(native_mode, sizeof(native_mode));
-  }
+  if (_rumble) SendCommand(rumble_mode, sizeof(rumble_mode));
+  if (_native) SendCommand(native_mode, sizeof(native_mode));
 
   SendCommand(config_exit, sizeof(config_exit));
 }
 
 void PS2X::SendCommand(const uint8_t *command, uint8_t size) {
-
   std::copy(_data, _data+21, _last_data);
 
   digitalWrite(_att_pin, LOW);
@@ -151,20 +137,14 @@ uint8_t PS2X::ShiftGamepad(uint8_t transmit_byte) {
   for (uint8_t i = 0; i < 8; i++) {
     digitalWrite(_clk_pin, LOW);
 
-    if (transmit_byte & _BV(i)) {
-      digitalWrite(_cmd_pin, HIGH);
-    }
-    else {
-      digitalWrite(_cmd_pin, LOW);
-    }
+    if (transmit_byte & _BV(i)) digitalWrite(_cmd_pin, HIGH);
+    else digitalWrite(_cmd_pin, LOW);
     
     delayMicroseconds(5);
     digitalWrite(_clk_pin, HIGH);
     delayMicroseconds(5);
 
-    if (digitalRead(_dat_pin)) {
-      received_byte |= _BV(i);
-    }
+    if (digitalRead(_dat_pin)) received_byte |= _BV(i);
   }
 
   return received_byte;

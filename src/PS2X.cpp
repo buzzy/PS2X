@@ -49,6 +49,15 @@ bool PS2X::ReadGamepad(bool small_motor, uint8_t large_motor) {
   _last_buttons = _buttons;
   _buttons = (uint16_t)(_data[3] | _data[4]<<8);
 
+  if (_analog_zero[PSS_LX] > 0) {
+    uint8_t buttons[] = {PSS_LX, PSS_LY, PSS_RX, PSS_RY};
+    for (uint8_t i = 0; i < 4; i++) {
+      if (_data[buttons[i]] < (_analog_zero[buttons[i]] - 10)) _data[buttons[i]] = map(_data[buttons[i]], 0, _analog_zero[buttons[i]]-1, 0, 126);
+      else if (_data[buttons[i]] > (_analog_zero[buttons[i]] + 10)) _data[buttons[i]] = map(_data[buttons[i]], _analog_zero[buttons[i]]+1, 255, 128, 255);
+      else _data[buttons[i]] = 127;
+    }
+  }
+
   return ((_data[1] & 0xF0) == 0x70);
 }
 
@@ -87,6 +96,8 @@ void PS2X::Calibrate() {
   _analog_zero[PSS_LY] = _data[PSS_LY];
   _analog_zero[PSS_RX] = _data[PSS_RX];
   _analog_zero[PSS_RY] = _data[PSS_RY];
+
+  ReadGamepad(false, 0);
 }
 
 uint8_t PS2X::Analog(uint8_t button) {
@@ -117,17 +128,6 @@ void PS2X::SendCommand(const uint8_t *command, uint8_t size) {
 
   digitalWrite(_att_pin, HIGH);
   delay(ATT_DELAY/1000);
-
-  //Exit the function here if the joystick has not been calibrated yet
-  if (_analog_zero[PSS_LX] == 0) return;
-
-  uint8_t buttons[] = {PSS_LX, PSS_LY, PSS_RX, PSS_RY};
-  for (uint8_t i = 0; i < 4; i++) {
-    if (_data[buttons[i]] < (_analog_zero[buttons[i]] - 10)) _data[buttons[i]] = map(_data[buttons[i]], 0, _analog_zero[buttons[i]]-1, 0, 126);
-    else if (_data[buttons[i]] > (_analog_zero[buttons[i]] + 10)) _data[buttons[i]] = map(_data[buttons[i]], _analog_zero[buttons[i]]+1, 255, 128, 255);
-    else _data[buttons[i]] = 127;
-  }
-
 }
 
 uint8_t PS2X::ShiftGamepad(uint8_t transmit_byte) {

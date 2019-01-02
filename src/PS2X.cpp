@@ -52,8 +52,10 @@ bool PS2X::ReadGamepad(bool small_motor, uint8_t large_motor) {
   if (_analog_zero[PSS_LX] > 0) {
     uint8_t buttons[] = {PSS_LX, PSS_LY, PSS_RX, PSS_RY};
     for (uint8_t i = 0; i < 4; i++) {
-      if (_data[buttons[i]] < (_analog_zero[buttons[i]] - 10)) _data[buttons[i]] = map(_data[buttons[i]], 0, _analog_zero[buttons[i]]-1, 0, 126);
-      else if (_data[buttons[i]] > (_analog_zero[buttons[i]] + 10)) _data[buttons[i]] = map(_data[buttons[i]], _analog_zero[buttons[i]]+1, 255, 128, 255);
+      //if (_data[buttons[i]] < (_analog_zero[buttons[i]] - 10)) _data[buttons[i]] = map(_data[buttons[i]], 0, _analog_zero[buttons[i]]-1, 0, 126);
+      //else if (_data[buttons[i]] > (_analog_zero[buttons[i]] + 10)) _data[buttons[i]] = map(_data[buttons[i]], _analog_zero[buttons[i]]+1, 255, 128, 255);
+      if (_data[buttons[i]] < _analog_zero[buttons[i]]) _data[buttons[i]] = map(_data[buttons[i]], 0, _analog_zero[buttons[i]]-1, 0, 126);
+      else if (_data[buttons[i]] > _analog_zero[buttons[i]]) _data[buttons[i]] = map(_data[buttons[i]], _analog_zero[buttons[i]]+1, 255, 128, 255);
       else _data[buttons[i]] = 127;
     }
   }
